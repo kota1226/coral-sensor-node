@@ -1,0 +1,25 @@
+An unPhone LVGL demo
+===
+
+Note: this demo **doesn't run on unphone7**.
+
+To build this using PlatformIO core, e.g. (in docker):
+
+```
+.../the-internet-of-things/support/magic.sh -D
+pio run -e unphone9 -t upload -t monitor
+```
+
+To build this with the Arduino IDE you need to:
+
+- unpack `unphone/libraries9.zip` to `Arduino/libraries`
+
+Notes:
+
+- if you're not using the `demos/` and `examples/` from the LVGL library you
+  don't need to use my fork of that library
+- substitute "7" for "9" above if building for unphone6
+- the build will parameterise compilation via `sketch/build_opt.h`, which
+  [works like
+  this](https://github.com/stm32duino/wiki/wiki/Customize-build-options-using-build_opt.h)
+- the working files for the port are in ../../extras/port-lvgl

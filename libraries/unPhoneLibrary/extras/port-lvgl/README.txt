@@ -1,0 +1,3 @@
+
+working files for the LVGL port; all of this is now integrated into the demo
+in examples/lvgl-demo or into the forks of the two libraries...

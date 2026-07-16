@@ -1,0 +1,33 @@
+{
+  "name": "unPhoneLibrary",
+  "keywords": "unphone, esp32, esp32s3",
+  "description": "The unPhone is an open Internet of Things electronics platform for educationalists, makers and developers based on the ESP32 and ESP32S3. The device makes rapid prototyping of IoT systems easy by providing pre-integrated UI, PMU, accelerometer, LoRa radio and etc., with an expansion capability conforming to Adafruit’s FeatherWing standard. Extensive documentation at https://iot.unphone.net and integration with the Arduino, Espressif and PlatformIO open source communities make getting up and running fast and lightweight.",
+  "homepage": "https://unphone.net/",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/hamishcunningham/unphonelibrary"
+  },
+  "version": "9.0.0",
+  "authors":
+  [
+    {
+      "name": "Hamish Cunningham",
+      "email": "hamish@gate.ac.uk",
+      "maintainer": true
+    },
+    {
+      "name": "Gareth Coleman"
+    },
+    {
+      "name": "Jon Williamson"
+    },
+    {
+      "name": "Mary Hewitt"
+    },
+    {
+      "name": "others"
+    }
+  ],
+  "frameworks": "*",
+  "platforms": "*"
+}

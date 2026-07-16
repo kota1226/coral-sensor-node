@@ -1,0 +1,138 @@
+#######################################
+# Syntax Coloring Map For unPhone
+#
+# seeded using 
+# https://raw.githubusercontent.com/aster94/Utilities/master/extras/keywords.py
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+unPhone 	KEYWORD1
+
+me      	KEYWORD1
+LCD_RESET	KEYWORD1
+BACKLIGHT	KEYWORD1
+LCD_CS  	KEYWORD1
+LCD_DC  	KEYWORD1
+LORA_CS 	KEYWORD1
+LORA_RESET	KEYWORD1
+TOUCH_CS	KEYWORD1
+LED_RED 	KEYWORD1
+POWER_SWITCH	KEYWORD1
+SD_CS   	KEYWORD1
+BUTTON1 	KEYWORD1
+BUTTON2 	KEYWORD1
+BUTTON3 	KEYWORD1
+IR_LEDS 	KEYWORD1
+EXPANDER_POWER	KEYWORD1
+LCD_RESET	KEYWORD1
+LCD_CS  	KEYWORD1
+LCD_DC  	KEYWORD1
+LORA_CS 	KEYWORD1
+LORA_RESET	KEYWORD1
+TOUCH_CS	KEYWORD1
+LED_RED 	KEYWORD1
+POWER_SWITCH	KEYWORD1
+SD_CS   	KEYWORD1
+BUTTON1 	KEYWORD1
+BUTTON2 	KEYWORD1
+BUTTON3 	KEYWORD1
+IR_LEDS 	KEYWORD1
+EXPANDER_POWER	KEYWORD1
+VIBE    	KEYWORD1
+LED_GREEN	KEYWORD1
+LED_BLUE	KEYWORD1
+USB_VSENSE	KEYWORD1
+uiCont  	KEYWORD1
+tftp    	KEYWORD1
+tsp     	KEYWORD1
+accelp  	KEYWORD1
+sdp     	KEYWORD1
+TS_MINX 	KEYWORD1
+TS_MAXX 	KEYWORD1
+TS_MINY 	KEYWORD1
+TS_MAXY 	KEYWORD1
+LORA_PAYLOAD_LEN	KEYWORD1
+LMIC_DIO0	KEYWORD1
+LMIC_DIO1	KEYWORD1
+LMIC_DIO0	KEYWORD1
+LMIC_DIO1	KEYWORD1
+BM_I2CADD	KEYWORD1
+BM_WATCHDOG	KEYWORD1
+BM_OPCON	KEYWORD1
+BM_STATUS	KEYWORD1
+BM_VERSION	KEYWORD1
+STORE_SIZE	KEYWORD1
+appName 	KEYWORD1
+buildTime	KEYWORD1
+unPhoneTCA	KEYWORD1
+i2c_address	KEYWORD1
+directions	KEYWORD1
+output_states	KEYWORD1
+
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin   	KEYWORD2
+getVersionNumber	KEYWORD2
+getMAC  	KEYWORD2
+button1 	KEYWORD2
+button2 	KEYWORD2
+button3 	KEYWORD2
+vibe    	KEYWORD2
+ir      	KEYWORD2
+powerSwitchIsOn	KEYWORD2
+usbPowerConnected	KEYWORD2
+checkPowerSwitch	KEYWORD2
+turnPeripheralsOff	KEYWORD2
+wakeOnPowerSwitch	KEYWORD2
+printWakeupReason	KEYWORD2
+redraw  	KEYWORD2
+provisioned	KEYWORD2
+uiLoop  	KEYWORD2
+recoverI2C	KEYWORD2
+factoryTestMode	KEYWORD2
+factoryTestSetup	KEYWORD2
+factoryTestLoop	KEYWORD2
+getAccelEvent	KEYWORD2
+backlight	KEYWORD2
+expanderPower	KEYWORD2
+rgb     	KEYWORD2
+loraSetup	KEYWORD2
+loraLoop	KEYWORD2
+loraSend	KEYWORD2
+batteryVoltage	KEYWORD2
+setShipping	KEYWORD2
+setRegister	KEYWORD2
+getRegister	KEYWORD2
+write8  	KEYWORD2
+read8   	KEYWORD2
+beginStore	KEYWORD2
+store   	KEYWORD2
+printStore	KEYWORD2
+clearStore	KEYWORD2
+begin   	KEYWORD2
+pinMode 	KEYWORD2
+digitalWrite	KEYWORD2
+digitalRead	KEYWORD2
+
+
+######################################
+# Constants (LITERAL1)
+######################################
+
+UNPHONE_H      	LITERAL1
+UNPHONE_TCA_INJECTED   	LITERAL1
+UNPHONE_SPIN   	LITERAL1
+UNPHONE_UI0    	LITERAL1
+UNPHONE_LORA   	LITERAL1
+UNPHONE_FACTORY_MODE   	LITERAL1
+D        	LITERAL1
+E        	LITERAL1
+WAIT_A_SEC     	LITERAL1
+WAIT_SECS      	LITERAL1
+WAIT_MS 	LITERAL1

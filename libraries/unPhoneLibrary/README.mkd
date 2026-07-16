@@ -1,0 +1,370 @@
+# unPhoneLibrary: supporting Sheffield's IoT platform
+
+This is an Arduino library for [the unPhone](https://unphone.net/the-unphone).
+
+If you want **to program an unPhone, read on**.
+
+Alternatively:
+
+- Learn more about the device and its background, creator team and etc. on
+  [unphone.net](https://unphone.net/).
+- Learn about the Internet of Things and how the unPhone fits in on
+  [iot.unphone.net](https://iot.unphone.net/).
+- Find more detailed device documentation and archives supporting older
+  versions on
+  [gitlab.com/hamishcunningham/unphone](https://gitlab.com/hamishcunningham/unphone).
+
+
+## Prerequisites
+
+We support these methods of programming unPhones:
+
+1. Arduino IDE (version 1.8.19)
+2. PlatformIO IDE in VSCode
+3. PlatformIO CLI on Linux or in a Docker container
+
+We assume you know the basics of one of these; if not, perhaps take a few
+minutes to review a getting started tutorial for your favourite option?
+
+(Other CLIs and IDEs work too -- just we can't guarantee that we can quickly
+fix issues for those. But do [tell us if you hit
+one](https://gitlab.com/hamishcunningham/unphonelibrary/-/issues/new)! We'll
+try to help.)
+
+Most things work best on Linux, and best of all on Ubuntu 22.04, but we also
+support Windows and MacOS. If you're happy with the command line then the most
+repeatable (and low risk) method is **3.**, in Docker. The most modern and
+full-featured method is **2.**, PlatformIO IDE in VSCode. The most mature (and
+historically the most stable) method is **1.**, the Arduino IDE.
+
+We currently support two versions of the unPhone, **7** (ESP32) and **9**
+(ESP32S3).
+
+
+## 1. Getting started (Arduino IDE)
+
+Install [Arduino IDE version
+1.8.19](https://www.arduino.cc/en/software#legacy-ide-18x) from [the Arduino
+community](https://www.arduino.cc). (This version is known to be stable and
+secure. The new 2.0.0 version will take over in time, but currently we
+recommend the older version.)
+
+Install the [Arduino ESP32
+Core](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html)
+from [Espressif](https://www.espressif.com/). There are multiple ways to do
+this. The easiest is [to use the
+IDE](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html#installing-using-arduino-ide),
+making sure to choose the **development release link** (or, if version 2.0.6
+of the core has been released, the stable release). For other ways to install
+the IDE and the core see the [CLI
+section](#getting-started-platformio-cli-docker-and-magicsh) below.
+
+[Install this
+library](https://docs.arduino.cc/software/ide-v1/tutorials/installing-libraries)
+(`unPhoneLibrary`).
+
+Finally, in your `Arduino/libraries` directory, unzip either
+[libraries7.zip](https://gitlab.com/hamishcunningham/unphone/-/raw/master/libraries7.zip)
+or
+[libraries9.zip](https://gitlab.com/hamishcunningham/unphone/-/raw/master/libraries9.zip)
+(depending on whether you're using an unphone7 or an unphone9).
+
+Now you can plug in an unPhone, open [an example sketch](#an-example-sketch)
+and get working.
+
+
+## 2. Getting started (PlatformIO / VSCode IDE)
+
+To use the PlatformIO IDE within VSCode, first install VSCode and then the
+PlatformIO extension.
+
+[Full details here](https://platformio.org/install/ide?install=vscode).
+
+You don't need to install the Arduino core or this library as PlatformIO will
+do that (based on the specification given in your `platformio.ini` file).
+
+Fire up VSCode, go to the PlatformIO home tab, and `Open Project` (e.g. [an
+example sketch](#an-example-sketch)) and get working.
+
+
+## 3. Getting started (PlatformIO CLI, Docker, and magic.sh)
+
+To use our Docker image:
+
+- [install
+  docker](https://docs.docker.com/engine/install/ubuntu/#installation-methods);
+  see notes below, and use a VM if you're not on Linux
+- download the (~10GB!) image: `docker pull hamishcunningham/iot:magic`
+- plug in an unPhone and note which port it is connected to
+- create a running container (where `UPLOAD_PORT` is the serial port and `PWD`
+  the directory containing your example sketch):
+
+```bash
+  docker run -it --device=${UPLOAD_PORT}
+    --user 1000:1000 --group-add=dialout --group-add=ubuntu
+    -v ${PWD}:/home/ubuntu/project --env DISPLAY hamishcunningham/iot:magic
+```
+
+Once the container is running with the port mapped, you can do a firmware
+build and upload it to the device using the PlatformIO CLI like this:
+
+```bash
+pio run -e unphone9 -t upload -t monitor
+```
+
+The next sections detail how to recreate the same installation locally
+(without Docker), and how to use our helper script, `magic.sh`, to manage the
+Docker commands like those above.
+
+
+### 3A. Local installation on **Ubuntu 22.04**
+
+You can do a local Linux install like this:
+
+- get a copy of our install script:
+  - `cd /tmp`
+  - `wget
+    https://gitlab.com/hamishcunningham/the-internet-of-things/-/raw/master/support/magic.sh`
+- make it executable, and use it to clone our unPhone, unPhoneLibrary and IoT
+  GitLab repos in your home directory:
+  - `chmod 755 magic.sh`
+  - `cd $HOME`
+  - `/tmp/magic.sh clone`
+- add (the newly cloned version of) magic.sh to your PATH, e.g. by editing
+  `~/.bashrc` and adding:
+  - `PATH=${PATH}:${HOME}/the-internet-of-things/support`
+- do a bunch of installs and downloads:
+  - `magic.sh setup`
+- set up your environment for PlatformIO CLI:
+  - `magic.sh use-pio`
+- cd to an example sketch, e.g.:
+  - `cd unPhoneLibrary/examples/everything`
+- plug in an unphone 9 (or 7) and check which port it is on (usually
+  `/dev/ttyACM0` for 9, or `/dev/ttyUSB0` for 7):
+  - `magic.sh lsports`
+- build and burn:
+  - `pio run -e unphone9 -t upload --upload-port /dev/ttyACM0 -t monitor
+    --monitor-port /dev/ttyACM0`
+
+If you're on **another Linux platform** or Ubuntu version, you may need a
+different combination of packages installed -- see the `do-local-setup` method
+in `magic.sh` and check [the official
+documentation](https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html#linux)
+which has sections for Debian/Ubuntu, Fedora and openSUSE. Alternatively try
+Docker: see next section. (This is also a good option if you're happy with the
+command line and want to avoid doing large installs into your current OS).
+
+
+### 3B. Installation via Docker
+
+The most reliable way to build unphone firmware is now to use our [Docker
+image](https://hub.docker.com/r/hamishcunningham/iot) (called
+`hamishcunningham/iot:magic`). This method works for both 64 bit x86/AMD and
+64 bit ARM processors (i.e. most modern desktops, laptops and servers, from
+the Raspberry Pi 4 to supercomputers). There's a downside though: you'll pay
+for the reliability in a steeper learning curve; this route is quite complex!
+
+On **MacOS or Windows** the serial port that you'll use to communicate with
+the unPhone is not passed through to Docker on MacOS or Windows, so we first
+need a VM to manage the ports. To do this:
+
+- install a virtualisation system like VirtualBox or Parallels and load an
+  Ubuntu 22.04 VM
+- install Docker within that VM
+
+Then on all platforms:
+
+- [install
+  docker](https://docs.docker.com/engine/install/ubuntu/#installation-methods);
+  **notes:**
+  - if you're on Windows or Mac, do this from within an Ubuntu (or other
+    Linux) VM so that you can map serial ports into the container; on Windows
+    WSL 1 also has this capability, but WSL 2 does not
+  - make sure that you're not running with unneccessary levels of privilege by
+    creating a `docker` group and adding yourself to it; don't use `sudo` to
+    execute docker commands
+  - test the installation with `docker run hello-world`
+  - there's a convenience method `magic.sh dckr-setup` that you can try if you
+    like, in which case skip ahead and install `magic.sh` now
+- check out our unphone and iot gitlab repositories into your HOME directory:
+  - `cd`
+  - `git clone https://gitlab.com/hamishcunningham/the-internet-of-things.git`
+  - `git clone https://gitlab.com/hamishcunningham/unPhoneLibrary.git`
+- add `magic.sh` to your PATH, e.g. by editing `~/.bashrc` and adding
+  `PATH=${PATH}:${HOME}/the-internet-of-things/support`
+- download the latest version of the docker image (**warning**: make sure you
+  have at 20GB or more of spare disk!):
+  - `magic.sh dckr-pull`
+
+When this completes you have successfully installed an entire operating
+system, several SDKs and an embarrassment of libraries. Phew! For your next
+trick, burn some firmware to a device:
+
+- choose a firmware example to work from, e.g. from `unPhoneLibrary/examples/`
+  or `the-internet-of-things/exercises/`
+- change directory to the location of the firmware, e.g. `cd
+  the-internet-of-things/exercises/HelloWorld`
+- plug in your unphone or other ESP32 device and check that the port is mapped
+  - `magic.sh lsports`
+- start a docker container and open a shell within it:
+  - `magic.sh -D`
+  - **note:** this will try to guess a port for your device, but may not work
+    (especially with the new version 9!), in which case add one or more `-P
+    port` flags, e.g.: `magic.sh -D -P /dev/ttyACM0`)
+
+You should now find yourself in a shell that has your copy of the example
+firmware mapped into `/home/ubuntu/project`, and all the necessary IDEs, SDKs
+and libraries installed in
+`/home/ubuntu/the-internet-of-things/support/tooling`.
+
+You should now be able to build, flash and monitor an example like this:
+
+```bash
+pio run -e unphone9 -t upload -t monitor
+```
+
+(assuming there's a `platformio.ini` present in that directory that defines an
+`unphone9` environment; other options coming soon!)
+
+If you've manually specified a port, try:
+
+```bash
+pio run -e unphone9 -t upload --upload-port /dev/ttyACM0 -t monitor --monitor-port /dev/ttyACM0
+```
+
+
+## Build config
+
+Build configuration can be modified in several different ways depending on
+your compiler toolchain. For Arduino, the file `sketch/build_opt.h` contains
+compiler flags (yes, it doesn't contain C or C++ code, go figure). For
+PlatformIO, the `build_flags` setting in `platformio.ini` does the same job.
+
+Examples of the unPhone-specific flags follow. For other flags (e.g.
+controlling LoRa and LMIC) see one of the examples that uses LoRa (e.g.
+"[examples/everything](https://gitlab.com/hamishcunningham/unphonelibrary/-/tree/main/examples/everything)").
+In each case the option should be set to 0 to disable or 1 to enable:
+
+Using `build_opt.h` (note no comments are allowed!):
+
+```
+-D UNPHONE_LORA=1
+-D UNPHONE_UI0=1
+-D UNPHONE_FACTORY_MODE=1
+```
+
+In `platformio.ini`:
+```
+build_flags =
+  ; unPhone settings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  -D UNPHONE_LORA=1             ; enable LoRa for this demo
+  -D UNPHONE_UI0=1              ; enable GFX UI
+  -D UNPHONE_FACTORY_MODE=1     ; enable factory test mode (requires UI0)
+```
+
+
+## Troubleshooting
+
+- The first time we burn firmware to a new board, we need to manually put it
+  into boot mode by holding button 2 and momentarily pressing reset
+  (otherwise, although the OS sees the port, esptool will not be able to write
+  to it); sometimes the device goes back into that state (or is in a bootloop
+  that prevents upload), and requires the same hold button2/touch reset
+  combination to fix.
+- Note also that the unphone9 port will usually appear as /dev/ttyACM0 in
+  ubuntu; occasionally we see it shifting over to ACM1 when resetting, so if
+  encountering problems writing to the board try changing the port (and/or 1.
+  above).
+- If you see an error `file not found sdkconfig.h` then you're probably
+  hitting [this issue](https://github.com/espressif/arduino-esp32/pull/6962)
+  and need [this fix](https://github.com/espressif/arduino-esp32/pull/7330).
+  (`magic.sh setup` should create the appropriate `Arduino/hardware/espressif`
+  tree for you; you might need to delete the old version first.)
+- Like most boards that use the Arduino ecosystem, the unPhone relies on lots
+  and lots of open source libraries (thanks folks!). Many errors are triggered
+  by getting an incorrect set of libraries, or putting them in the wrong
+  place. The key things to remember are that:
+  - the Arduino IDE needs a complete set present in the `Arduino/libraries`
+    directory (if you see "header not found" errors then look there first!)
+  - PlatformIO manage libraries (in both CLI and IDE) via the `platformio.ini`
+    file, so you should only need to have the correct spec there for it to
+    work. The **exception to this** is for unphone7, where you need our
+    patched libraries, [available as libraries7.zip
+    here](https://gitlab.com/hamishcunningham/unphone/-/raw/master/libraries7.zip),
+    which should be put in your sketch's `lib/` directory. (The version 9
+    [.zip is
+    here](https://gitlab.com/hamishcunningham/unphone/-/raw/master/libraries9.zip)
+    .)
+- If the display flashes every second or so (and not much else happens) then
+  you may be in a "boot loop": the device is starting up, crashing, then
+  rebooting... The solution is to fix whatever pathology is in the last
+  firmware you burned and reflash.
+- The holes for the front panel buttons are a little tight on some of the spin
+  9 cases; borrow a screwdriver and score them out a little if necessary.
+- If your touchscreen is intermitent and you see messages like `menuItem=-1,
+  ignoring` your device housing (case) may be causing phanton reads. Try the
+  same code on another device and/or loosen the case screws a little. (The
+  problem seems to be caused by torsion on the touchscreen, probably due to
+  changes made to the support shims in spin 9.)
+- An error about PSRAM, `E (258) psram: PSRAM ID read error: 0x00ffffff`, can
+  be ignored.
+- If you're running PlatformIO and seeing missing header errors even when the
+  relevant library has been downloaded (into e.g. `.pio/lib_deps/unphone9`),
+  it is possible that the dependency analysis has failed to see the header. A
+  workaround is to add the missing header as an include in `sketch/sketch.ino`
+  and try again.
+- Trouble getting CircuitPython to install? Have a look at these sources:
+  - [Adafruit's intro](https://learn.adafruit.com/welcome-to-circuitpython?view=all)
+  - Adafruit's guide to [CircuitPython on the ESP32](https://learn.adafruit.com/circuitpython-with-esp32-quick-start?view=all)
+    (note that unPhone 9 uses an ESP32S3, so make sure to read carefully for the
+    parts that are specific to the S3)
+  - the CircuitPython section of the [ESP32S3 Feather page](https://learn.adafruit.com/adafruit-esp32-s3-feather?view=all_)
+    (which is the closest Adafruit board to the unPhone)
+- Intermittent LoRa? Like everything running on a microcontroller, timing is
+  critical. For radio communications, this is especially true, as both the
+  device and the remote transceiver it is talking to need to have to talk and
+  listen at exactly the right time. Start from a working example (e.g.
+  `examples/everything`) and work slowly, checking that your connection is
+  working at each step. Also note that multiple devices talking to a single
+  gateway may contend with each other.
+- UI unresponsive? The UI0 (GFX-based) event loop shares a FreeRTOS task with
+  LoRa transaction servicing, and some LoRa processing can take several 10s of
+  seconds.
+- Lots of odd errors about GPIO assignments, e.g.
+  `E (2982) gpio: gpio_set_level(226): GPIO output gpio_num error`? Perhaps
+  you're programming an unPhone 7 with unPhone 9 libraries...?
+- Error compiling `lvgl-demo` for unPhone 7? E.g.: `sketch.ino.elf section
+  '.dram0.bss' will not fit in region 'dram0_0_seg'`. Spin 7 has insufficient
+  memory, try an unPhone 9!
+- Error installing libraries in PlatformIO with message something like `Error:
+  Package version 2.0.0-rc.1+sha.fe9774f doesn't satisfy requirements
+  ^2.0.14-beta based on PackageMetaData <type=library name=`. This is likely
+  to be a wierdness in the way that a particular library has set up version
+  numbers and/or branches and/or releases in their git repo. For example, when
+  `WiFiManager` went from version `2.0.14-beta` to `2.0.0-rc1` none of the
+  obvious specifiers for that library in `platformio.ini` worked any more. The
+  workaround is to use a particular commit hash for the specifier, e.g.:
+  `https://github.com/tzapu/WiFiManager#fe9774fe0f231767f3fc59de1a03a9c44f06adc3`.
+- Mysterious disappearance of `/dev/ttyUSBn` on Ubuntu a few seconds after
+  plugging in? There seems to be a regression in Ubuntu 22.04 (and possible
+  Debian upstream) that triggers this. To verify / fix:
+  - check dmesg (`sudo dmesg`) for errors associated with the serial line that
+    mention `brltty` (the Braille terminal)
+  - if you're getting these, try disabling it, e.g.: `sudo apt remove brltty`
+- Got a problem that looks like a bug? Or a feature request? Please
+  [check for existing issues](https://gitlab.com/hamishcunningham/unphonelibrary/-/issues/) and if none
+  [raise a new one](https://gitlab.com/hamishcunningham/unphonelibrary/-/issues/new).
+
+
+## An Example Sketch
+
+A good example to start with is [examples/everything](examples/everything),
+which, as the name suggests, has examples of a bit of everything!
+
+
+
+## Programming the unPhone
+
+For more details of the programming model and how to work with this library,
+see [chapter 11 of _Micasa su
+Botnet?_](https://iot.unphone.net/#programming-the-unphone).
